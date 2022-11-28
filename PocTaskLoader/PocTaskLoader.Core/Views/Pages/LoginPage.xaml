@@ -2,11 +2,46 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PocTaskLoader.Views.Pages.LoginPage"
-             Title="LoginPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             xmlns:ViewModels="clr-namespace:PocTaskLoader.Core.ViewModels"
+             xmlns:sharpnado="clr-namespace:Sharpnado.TaskLoaderView;assembly=Sharpnado.Maui.TaskLoaderView"
+             xmlns:toolkit="clr-namespace:CommunityToolkit.Maui.Extensions;assembly=CommunityToolkit.Maui"
+             Title="LoginPage"
+             Padding="20"
+             x:DataType="ViewModels:LoginViewModel">
+
+    <Grid>
+        <Grid
+            BindingContext="{Binding Source={RelativeSource AncestorType={x:Type ViewModels:LoginViewModel}}}"
+            VerticalOptions="CenterAndExpand"
+            RowDefinitions="Auto, Auto, Auto, Auto"
+            RowSpacing="20">
+            <Entry
+                ReturnType="Next"
+                Placeholder="Username"
+                Text="{Binding Username}"
+                IsReadOnly="{Binding LoginCommand.Notifier.ShowLoader}"/>
+            <Entry
+                Grid.Row="1"
+                Placeholder="Password"
+                Text="{Binding Password}"
+                IsReadOnly="{Binding LoginCommand.Notifier.ShowLoader}"/>
+
+            <Button
+                Text="Login"
+                Grid.Row="2"
+                Command="{Binding LoginCommand}"
+                IsVisible="{Binding LoginCommand.Notifier.ShowLoader, Converter={StaticResource BoolToInvertedBoolValueConverter}}"/>
+
+            <ActivityIndicator
+                Grid.Row="2"
+                IsRunning="True"
+                IsVisible="{Binding LoginCommand.Notifier.ShowLoader}"/>
+
+            <Label
+                Grid.Row="3"
+                TextColor="Red"
+                HorizontalOptions="Center"
+                Text="{Binding LoginCommand.Notifier.Error.Message}"/>
+        </Grid>
+    </Grid>
 </ContentPage>
